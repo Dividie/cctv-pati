@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CCTV Kabupaten Pati</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  </head>
+  <body>
+    <header>
+    <h1><i class="fa-solid fa-video"></i> CCTV Kabupaten Pati</h1>
+    <p>Pantau kondisi lalu lintas dan area publik secara real-time</p>
+
+    <div class="stats-grid">
+
+    <div class="stat-card">
+        <h3>Total CCTV</h3>
+        <span>7</span>
+    </div>
+
+    <div class="stat-card">
+        <h3>Lokasi</h3>
+        <span>3</span>
+    </div>
+
+</div>
+</header>
+
+    <hr />
+
+    <input type="text" id="search" placeholder="Cari CCTV..." />
+    <div id="filter-container"></div>
+      <button class="filter-btn" onclick="filterLokasi('Semua')">Semua</button>
+      <button class="filter-btn" onclick="filterLokasi('Pati Kota')">
+        Pati Kota
+      </button>
+      <button class="filter-btn" onclick="filterLokasi('Terminal Pati')">
+        Terminal Pati
+      </button>
+      <button class="filter-btn" onclick="filterLokasi('Lingkar Selatan')">
+        Lingkar Selatan
+      </button>
+    </div>
+    <div id="cctv-container"></div>
+
+    <div id="modal" class="modal">
+
+    <div class="modal-content">
+
+        <span class="close" onclick="tutupCCTV()">
+            &times;
+        </span>
+
+        <h2 id="judul-cctv"></h2>
+
+        <iframe
+            id="cctv-frame"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
+
+    </div>
+
+</div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
