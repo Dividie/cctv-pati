@@ -39,11 +39,7 @@ const cctvData = [
 const container = document.getElementById("cctv-container");
 const search = document.getElementById("search");
 const filterContainer = document.getElementById("filter-container");
-const stats = document.getElementById("stats");
 
-stats.innerHTML = `
- Total CCTV: ${cctvData.length}
-`;
 
 function tampilkanCCTV(data) {
   container.innerHTML = "";
@@ -108,7 +104,7 @@ function buatFilterLokasi() {
 
     filterContainer.appendChild(button);
   });
-  buatFilterLokasi();
+  
 }
 
 function bukaCCTV(nama, url) {
@@ -124,3 +120,5 @@ function tutupCCTV() {
 
   document.getElementById("cctv-frame").src = "";
 }
+
+tampilkanCCTV(cctvData);
