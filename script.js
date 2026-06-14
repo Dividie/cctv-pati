@@ -2,37 +2,37 @@ const cctvData = [
   {
     nama: "ALUN ALUN PATI 1",
     lokasi: "Pati Kota",
-    url: "http://103.110.43.72:8080/8eff05af-b414-41ef-b9fb-45102439095d.html",
+    url: "https://streaming.patikab.go.id/8eff05af-b414-41ef-b9fb-45102439095d.html",
   },
   {
     nama: "ALUN ALUN PATI 2",
     lokasi: "Pati Kota",
-    url: "http://103.110.43.72:8080/b7b5a673-ec48-4dff-b842-918f639d0b4a.html",
+    url: "https://streaming.patikab.go.id/b7b5a673-ec48-4dff-b842-918f639d0b4a.html",
   },
   {
     nama: "SIMPANG SOKOKULON",
     lokasi: "Lingkar Selatan",
-    url: "http://103.110.43.72:8080/6f10803d-871d-4da2-91d8-90c92c498a1e.html",
+    url: "https://streaming.patikab.go.id/6f10803d-871d-4da2-91d8-90c92c498a1e.html",
   },
   {
     nama: "SIMPANG WIDOROKANDANG",
     lokasi: "Lingkar Selatan",
-    url: "http://103.110.43.72:8080/9d17fb99-d964-445f-8861-09ed7c56626a.html",
+    url: "https://streaming.patikab.go.id/9d17fb99-d964-445f-8861-09ed7c56626a.html",
   },
   {
     nama: "TERMINAL BUS SLEKO 1",
     lokasi: "Terminal Pati",
-    url: "http://103.110.43.72:8080/22ab6501-63f2-43d6-af1b-ce6c1ed7cef0.html",
+    url: "https://streaming.patikab.go.id/dfd316df-7293-40d8-b523-0b2b7ddb79df.html",
   },
   {
     nama: "TERMINAL BUS SLEKO 2",
     lokasi: "Terminal Pati",
-    url: "http://103.110.43.72:8080/dfd316df-7293-40d8-b523-0b2b7ddb79df.html",
+    url: "https://streaming.patikab.go.id/22ab6501-63f2-43d6-af1b-ce6c1ed7cef0.html",
   },
   {
     nama: "TERMINAL BUS SLEKO 3",
     lokasi: "Terminal Pati",
-    url: "http://103.110.43.72:8080/e74e945a-e872-4f35-9ebd-b25d78db0a8c.html",
+    url: "https://streaming.patikab.go.id/e74e945a-e872-4f35-9ebd-b25d78db0a8c.html",
   },
 ];
 
