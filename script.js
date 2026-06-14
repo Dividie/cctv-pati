@@ -10,6 +10,16 @@ const cctvData = [
     url: "https://streaming.patikab.go.id/b7b5a673-ec48-4dff-b842-918f639d0b4a.html",
   },
   {
+    nama: "Halaman Parkir Pengadilan Agama Pati",
+    lokasi: "Pati Kota",
+    url: "https://papati.cctvbadilag2.my.id/400967PAPATI/play.html?name=983828681419099467046478",
+  },
+  {
+    nama: "Ruang Tunggu Sidang Pengadilan Agama Pati",
+    lokasi: "Pati Kota",
+    url: "https://papati.cctvbadilag2.my.id/400967PAPATI/play.html?name=666174141875669052394405",
+  },
+  {
     nama: "SIMPANG SOKOKULON",
     lokasi: "Lingkar Selatan",
     url: "https://streaming.patikab.go.id/6f10803d-871d-4da2-91d8-90c92c498a1e.html",
