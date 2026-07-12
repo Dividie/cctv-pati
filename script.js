@@ -46,89 +46,83 @@ const cctvData = [
   },
 ];
 
-const container = document.getElementById("cctv-container");
-const search = document.getElementById("search");
-const filterContainer = document.getElementById("filter-container");
+let currentFilter = "all";
 
-
-function tampilkanCCTV(data) {
-  container.innerHTML = "";
-
-  data.forEach((cctv) => {
-    container.innerHTML += `
-<div class="card"
-onclick="bukaCCTV('${cctv.nama}','${cctv.url}')">
-<div class="status online">
-    ● ONLINE
-</div>
-
-    <h3><i class="fa-solid fa-video"></i>  ${cctv.nama}</h3>
-
-    <span class="badge">
-        ${cctv.lokasi}
-    </span>
-
-</div>
-`;
-  });
-  
-}
-
-tampilkanCCTV(cctvData);
-
-search.addEventListener("keyup", () => {
-  const keyword = search.value.toLowerCase();
-
-  const hasil = cctvData.filter(
-    (cctv) =>
-      cctv.nama.toLowerCase().includes(keyword) ||
-      cctv.lokasi.toLowerCase().includes(keyword),
-  );
-
-  tampilkanCCTV(hasil);
+// Inisialisasi Aplikasi
+document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+    renderSidebarMenu();
+    renderCCTVGrid(cctvData);
+    initSearch();
 });
 
-function filterLokasi(lokasi) {
-  if (lokasi === "Semua") {
-    tampilkanCCTV(cctvData);
-    return;
-  }
+// 1. Generate Menu Sidebar Berdasarkan Lokasi Unik Secara Otomatis
+function renderSidebarMenu() {
+    const areaListContainer = document.getElementById('areaList');
+    // Ambil lokasi unik dari data
+    const unikLokasi = [...new Set(cctvData.map(item => item.lokasi))];
+    
+    let menuHTML = `<li class="active" data-area="all">Semua Area</li>`;
+    unikLokasi.forEach(lokasi => {
+        menuHTML += `<li data-area="${lokasi}">${lokasi}</li>`;
+    });
+    
+    areaListContainer.innerHTML = menuHTML;
 
-  const hasil = cctvData.filter((cctv) => cctv.lokasi === lokasi);
-
-  tampilkanCCTV(hasil);
+    // Tambah Event Listener Klik untuk Filter
+    areaListContainer.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', (e) => {
+            areaListContainer.querySelectorAll('li').forEach(item => item.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            currentFilter = e.target.getAttribute('data-area');
+            filterAndSearch();
+        });
+    });
 }
 
-function buatFilterLokasi() {
-  const lokasiUnik = ["Semua", ...new Set(cctvData.map((cctv) => cctv.lokasi))];
+// 2. Render Kartu CCTV Menggunakan IFRAME
+function renderCCTVGrid(data) {
+    const grid = document.getElementById('cctvGrid');
+    
+    if (data.length === 0) {
+        grid.innerHTML = `<div class="no-data">Kamera tidak ditemukan atau offline.</div>`;
+        return;
+    }
 
-  lokasiUnik.forEach((lokasi) => {
-    const button = document.createElement("button");
+    grid.innerHTML = data.map(cctv => `
+        <div class="cctv-card">
+            <div class="video-placeholder">
+                <div class="live-tag">
+                    <span class="pulse-dot"></span> LIVE
+                </div>
+                <iframe src="${cctv.url}" scrolling="no" allowfullscreen></iframe>
+            </div>
+            <div class="cctv-info">
+                <h4>${cctv.nama}</h4>
+                <p><i data-lucide="map-pin"></i> ${cctv.lokasi}</p>
+            </div>
+        </div>
+    `).join('');
 
-    button.textContent = lokasi;
-    button.className = "filter-btn";
+    // Re-render icon lucide yang baru dibuat di dalam grid
+    lucide.createIcons();
+}
 
-    button.addEventListener("click", () => {
-      filterLokasi(lokasi);
+// 3. Gabungan Fungsi Filter Kategori dan Kolom Pencarian
+function initSearch() {
+    const searchInput = document.getElementById('searchLocation');
+    searchInput.addEventListener('input', filterAndSearch);
+}
+
+function filterAndSearch() {
+    const keyword = document.getElementById('searchLocation').value.toLowerCase();
+    
+    const filteredData = cctvData.filter(cctv => {
+        const matchArea = (currentFilter === 'all' || cctv.lokasi === currentFilter);
+        const matchKeyword = cctv.nama.toLowerCase().includes(keyword) || cctv.lokasi.toLowerCase().includes(keyword);
+        return matchArea && matchKeyword;
     });
 
-    filterContainer.appendChild(button);
-  });
-  
+    renderCCTVGrid(filteredData);
 }
-
-function bukaCCTV(nama, url) {
-  document.getElementById("judul-cctv").innerText = nama;
-
-  document.getElementById("cctv-frame").src = url;
-
-  document.getElementById("modal").style.display = "block";
-}
-
-function tutupCCTV() {
-  document.getElementById("modal").style.display = "none";
-
-  document.getElementById("cctv-frame").src = "";
-}
-
-tampilkanCCTV(cctvData);

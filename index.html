@@ -1,91 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Monitoring - Kabupaten Pati</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CCTV Kabupaten Pati</title>
-
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  </head>
-  <body>
-    <header>
-    <div class="header-left">
-        <img src="logo.png" alt="Logo Kabupaten Pati" class="logo">
-        
-        <div>
-            <h1>Informasi Real-Time</h1>
-            <h1>Kabupaten Pati</h1>
-            <p>Monitoring CCTV dan Informasi Publik</p>
+    <header class="navbar">
+        <div class="logo-area">
+            <h1>Pati<span>CCTV</span></h1>
         </div>
+        <div class="system-status">
+            <span class="status-indicator online"></span>
+            <p>Sistem Pemantauan Aktif</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" id="searchLocation" placeholder="Cari lokasi...">
+            </div>
+            
+            <h3>Wilayah</h3>
+            <ul class="area-list" id="areaList"></ul> 
+        </aside>
+
+        <main class="content-area">
+            <div class="content-header">
+                <h2>Live Monitoring Grid</h2>
+            </div>
+
+            <div class="cctv-grid" id="cctvGrid"></div>
+        </main>
     </div>
-    <div class="stats-grid">
-
-    <div class="stat-card">
-        <h3>Total CCTV</h3>
-        <span>9</span>
-    </div>
-
-    <div class="stat-card">
-        <h3>Lokasi</h3>
-        <span>3</span>
-    </div>
-
-</div>
-</header>
-
-    <hr />
-
-    <input type="text" id="search" placeholder="Cari CCTV..." />
-    <div id="filter-container"></div>
-      <button class="filter-btn" onclick="filterLokasi('Semua')">Semua</button>
-      <button class="filter-btn" onclick="filterLokasi('Pati Kota')">
-        Pati Kota
-      </button>
-      <button class="filter-btn" onclick="filterLokasi('Terminal Pati')">
-        Terminal Pati
-      </button>
-      <button class="filter-btn" onclick="filterLokasi('Lingkar Selatan')">
-        Lingkar Selatan
-      </button>
-    </div>
-    <div id="cctv-container"></div>
-
-    <div id="modal" class="modal">
-
-    <div class="modal-content">
-
-        <span class="close" onclick="tutupCCTV()">
-            &times;
-        </span>
-
-        <h2 id="judul-cctv"></h2>
-
-        <iframe
-            id="cctv-frame"
-            frameborder="0"
-            allowfullscreen>
-        </iframe>
-
-    </div>
-
-</div>
 
     <script src="script.js"></script>
-  </body>
-
-  <footer class="footer">
-    <h1>
-        © 2026 Informasi Real-Time Kabupaten Pati
-    </h1>
-    <p>
-        Data dan siaran CCTV berasal dari portal resmi <a href="https://cctv.patikab.go.id/"
-           target="_blank">
-           CCTV Kabupaten Pati.
-    </p>
-</footer>
+</body>
 </html>
