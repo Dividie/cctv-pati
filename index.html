@@ -36,7 +36,7 @@
         }
     </script>
     <style>
-        /* Custom scrollbar styling for neat dashboard look */
+        /* Kustomisasi scrollbar untuk tampilan dashboard yang rapi */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -52,7 +52,7 @@
             background: #cbd5e1;
             border-radius: 10px;
         }
-        /* Pulse Animation for Live Indicator */
+        /* Animasi denyut hidup untuk status siaran langsung */
         @keyframes custom-pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.9); }
@@ -89,6 +89,11 @@
 
             <!-- Header Actions -->
             <div class="flex items-center space-x-3">
+                <!-- Mobile Control Toggle Button (Hanya terlihat di layar kecil) -->
+                <button onclick="openMobileSidebar()" class="lg:hidden p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50" aria-label="Buka Panel Kontrol" title="Buka Panel Kontrol">
+                    <i class="fa-solid fa-sliders text-lg" aria-hidden="true"></i>
+                </button>
+
                 <!-- Theme Toggle Button -->
                 <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all duration-200 border border-slate-200/50 dark:border-slate-700/50" aria-label="Ganti Tema" title="Ganti Tema">
                     <i id="lightIcon" class="fa-solid fa-sun text-amber-500 text-lg" aria-hidden="true"></i>
@@ -98,14 +103,25 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-grow max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+    <!-- BACKDROP SIDEBAR SELULER (Hanya tampil di perangkat mobile saat sidebar dibuka) -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300 opacity-0" onclick="closeMobileSidebar()"></div>
 
-        <!-- SIDEBAR SECTION -->
-        <aside class="w-full lg:w-[320px] shrink-0 flex flex-col gap-5">
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6 relative">
+
+        <!-- SIDEBAR SECTION (Menggunakan layout laci geser di seluler, dan layout kolom statis di desktop) -->
+        <aside id="sidebarPanel" class="fixed inset-y-0 left-0 z-50 w-[300px] h-full bg-white dark:bg-[#0f172a] p-5 flex flex-col gap-5 border-r border-slate-200 dark:border-slate-800/80 transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0 lg:static lg:h-auto lg:w-[320px] lg:p-0 lg:bg-transparent lg:dark:bg-transparent lg:border-r-0 lg:z-auto overflow-y-auto shrink-0">
             
+            <!-- Mobile Sidebar Header (Hanya tampil di perangkat mobile) -->
+            <div class="flex items-center justify-between lg:hidden border-b border-slate-200 dark:border-slate-800 pb-3 mb-1">
+                <span class="font-extrabold text-slate-900 dark:text-white text-sm tracking-wider uppercase">Panel Kontrol</span>
+                <button onclick="closeMobileSidebar()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition-colors" title="Tutup Panel" aria-label="Tutup Panel Kontrol">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
             <!-- Search & Control Card -->
-            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
+            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300 lg:border lg:shadow-sm">
                 <h3 class="text-sm font-bold text-slate-900 dark:text-slate-200 mb-3 tracking-wide uppercase">Cari Lokasi CCTV</h3>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
@@ -121,18 +137,18 @@
             </div>
 
             <!-- Dynamic Area Selector Card -->
-            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
+            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300 lg:border lg:shadow-sm">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold text-slate-900 dark:text-slate-200 tracking-wide uppercase">Daftar Wilayah</h3>
                     <span id="activeAreaCountLabel" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md font-semibold">Semua</span>
                 </div>
                 <ul class="space-y-1.5" id="areaList">
-                    <!-- Generated Dynamically -->
+                    <!-- Ditampilkan secara dinamis melalui Javascript -->
                 </ul>
             </div>
 
             <!-- Inline Help & FAQ Card -->
-            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300">
+            <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800/80 shadow-sm transition-colors duration-300 lg:border lg:shadow-sm">
                 <h3 class="text-sm font-bold text-slate-900 dark:text-slate-200 mb-3 tracking-wide uppercase flex items-center gap-2">
                     <i class="fa-solid fa-circle-question text-brand-500" aria-hidden="true"></i> Bantuan & FAQ
                 </h3>
@@ -144,7 +160,7 @@
                             <i id="faqIcon-1" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200 text-[10px]" aria-hidden="true"></i>
                         </button>
                         <div id="faqContent-1" class="hidden p-3 bg-white dark:bg-[#0f172a] text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60 leading-relaxed">
-                            Cukup klik salah satu nama wilayah di panel atas untuk menyaring kamera. Klik "Semua Area" untuk mereset seluruh penapisan.
+                            Cukup klik salah satu nama wilayah di panel daftar wilayah untuk menyaring kamera. Klik "Semua Area" untuk mereset seluruh filter lokasi.
                         </div>
                     </div>
 
@@ -155,7 +171,7 @@
                             <i id="faqIcon-2" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200 text-[10px]" aria-hidden="true"></i>
                         </button>
                         <div id="faqContent-2" class="hidden p-3 bg-white dark:bg-[#0f172a] text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60 leading-relaxed">
-                            Hal ini terjadi bila server streaming resmi Diskominfo sedang mengalami offline atau gangguan. Silakan klik tombol "Hubungkan Ulang" untuk mencoba memuat kembali feed.
+                            Hal ini terjadi bila server penyiaran resmi Diskominfo sedang mengalami kendala jaringan atau offline. Silakan klik tombol "Hubungkan Ulang" untuk memuat kembali feed.
                         </div>
                     </div>
 
@@ -166,7 +182,7 @@
                             <i id="faqIcon-3" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-200 text-[10px]" aria-hidden="true"></i>
                         </button>
                         <div id="faqContent-3" class="hidden p-3 bg-white dark:bg-[#0f172a] text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/60 leading-relaxed">
-                            Kirim surel aduan teknis Anda dengan menyebutkan nama kamera secara jelas ke alamat resmi: <strong class="text-brand-500">cctv-report@patikab.go.id</strong>.
+                            Kirim laporan teknis Anda dengan menyebutkan lokasi kamera secara jelas ke email aduan dinas resmi berikut: <strong class="text-brand-500">cctv-report@patikab.go.id</strong>.
                         </div>
                     </div>
                 </div>
@@ -200,13 +216,13 @@
                 <!-- Time & Date Badge (2026 Forced Context) -->
                 <div class="flex items-center space-x-2 text-sm bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 px-4 py-2 rounded-xl text-slate-700 dark:text-slate-300 shadow-sm self-start sm:self-auto">
                     <i class="fa-solid fa-clock text-brand-500 mr-1.5" aria-hidden="true"></i>
-                    <span id="realtimeClock" class="font-mono font-semibold">Minggu, 12 Juli 2026 12:18:49</span>
+                    <span id="realtimeClock" class="font-mono font-semibold">Minggu, 12 Juli 2026 12:44:14</span>
                 </div>
             </div>
 
             <!-- CCTV CARDS GRID -->
             <div id="cctvGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- CCTV Cards will be loaded dynamically via renderCCTVGrid() using actual streaming iframes -->
+                <!-- Grid CCTV akan dimuat secara dinamis via renderCCTVGrid() -->
             </div>
 
             <!-- Empty State View -->
@@ -224,13 +240,18 @@
 
     </main>
 
+    <!-- FLOATING ACTION BUTTON (Hanya terlihat di layar smartphone/seluler) -->
+    <button onclick="openMobileSidebar()" class="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-brand-500 hover:bg-brand-600 text-white shadow-xl shadow-brand-500/30 flex items-center justify-center lg:hidden transition-all hover:scale-110 active:scale-95" aria-label="Buka Filter dan Bantuan" title="Buka Filter dan Bantuan">
+        <i class="fa-solid fa-sliders text-xl" aria-hidden="true"></i>
+    </button>
+
     <!-- DETAILED VIEW MODAL -->
     <div id="detailModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="detailTitle" role="dialog" aria-modal="true">
         <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <!-- Dark Backdrop -->
             <div class="fixed inset-0 bg-slate-950/90 backdrop-blur-md transition-opacity duration-300" onclick="closeDetailModal()"></div>
             
-            <!-- This element is to trick the browser into centering the modal contents. -->
+            <!-- Elemen ini membantu agar posisi modal seimbang di tengah layar komputer -->
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
             <div class="inline-block align-bottom bg-white dark:bg-[#0f172a] rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full border border-slate-200 dark:border-slate-800">
@@ -253,11 +274,11 @@
                         </button>
                     </div>
 
-                    <!-- Large Screen Container playing actual iframe streaming -->
+                    <!-- Container Siaran Detail Iframe -->
                     <div class="relative aspect-video w-full rounded-2xl bg-black overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner mb-4">
                         <iframe id="detailIframe" title="Siaran Langsung Detail Kamera Pengawas" class="w-full h-full block border-0" scrolling="no" allowfullscreen src=""></iframe>
                         
-                        <!-- Overlay grid markers for surveillance camera aesthetic -->
+                        <!-- Garis bingkai grid estetik pemantauan -->
                         <div class="absolute inset-0 border border-slate-500/10 pointer-events-none grid grid-cols-3 grid-rows-3">
                             <div></div><div></div><div></div>
                             <div></div><div></div><div></div>
@@ -294,7 +315,7 @@
 
     <!-- CORE CONTROLLER JAVASCRIPT -->
     <script>
-        // Real Live CCTV Database from Diskominfo Pati & PA Pati
+        // Database Kamera Pengawas Berbasis Server Streaming Resmi Kabupaten Pati & PA Pati
         const cctvData = [
             {
                 id: 1,
@@ -354,9 +375,9 @@
 
         let currentFilter = "all";
         let activeDetailId = null;
-        let cctvStatuses = {}; // Cache to store connection status ('memuat', 'live', or 'error')
+        let cctvStatuses = {}; // Cache penampung status koneksi ('memuat', 'live', atau 'error')
 
-        // Default to Light Mode
+        // Menginisialisasi Sistem Pertama Kali (Default: Light Mode)
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             if (savedTheme === 'light') {
@@ -369,7 +390,7 @@
                 document.getElementById('darkIcon').classList.remove('hidden');
             }
 
-            // Start clock (Target: Year 2026 Context)
+            // Memulai jam digital real-time (Konteks Tahun 2026)
             setInterval(updateClock, 1000);
             updateClock();
 
@@ -380,7 +401,7 @@
             checkAllCCTVStatus();
         });
 
-        // Forced Year 2026 Clock Representation
+        // Representasi Jam Digital Real-time Tahun 2026
         function updateClock() {
             const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -400,7 +421,7 @@
             document.getElementById('realtimeClock').innerText = clockString;
         }
 
-        // Generate Sidebar Menu Based on Unique Locations
+        // Menggenerasi Menu Samping Secara Dinamis Berdasarkan Lokasi Unik
         function renderSidebarMenu() {
             const areaListContainer = document.getElementById('areaList');
             const unikLokasi = [...new Set(cctvData.map(item => item.lokasi))];
@@ -437,7 +458,7 @@
             
             areaListContainer.innerHTML = menuHTML;
 
-            // Navigation Selection Event Handlers
+            // Menambahkan Event Listener Klik untuk Menu Samping
             areaListContainer.querySelectorAll('.area-item-btn').forEach(li => {
                 li.addEventListener('click', (e) => {
                     const currentLi = e.currentTarget;
@@ -458,10 +479,16 @@
                     currentFilter = currentLi.getAttribute('data-area');
                     document.getElementById('activeAreaCountLabel').innerText = currentFilter === 'all' ? 'Semua' : currentFilter;
                     filterAndSearch();
+
+                    // Otomatis menutup laci kontrol jika diakses dari perangkat mobile/smartphone
+                    if (window.innerWidth < 1024) {
+                        closeMobileSidebar();
+                    }
                 });
             });
         }
 
+        // Penentu Kelas Ikon Wilayah
         function getAreaIconClass(area) {
             switch(area) {
                 case 'Pati Kota': return 'fa-tree-city';
@@ -471,18 +498,18 @@
             }
         }
 
-        // Verify active stream availability in background (Passive/Active Check combo)
+        // Melakukan Verifikasi Status Koneksi Iframe CCTV Secara Asynchronous
         async function checkCCTVStatus(cctvId, url, triggerRender = true) {
             cctvStatuses[cctvId] = 'memuat';
             if (triggerRender) updateCCTVBadgeUI(cctvId);
 
             try {
-                // Timeout controller to prevent long loading states on slow connection
+                // Pengendali batas waktu (timeout) untuk mencegah muatan yang lama
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 6500);
 
-                // Fetch request using no-cors mode to bypass SOP constraints
-                const response = await fetch(url, { 
+                // Ping menggunakan no-cors mode untuk melewati SOP browser constraint
+                await fetch(url, { 
                     method: 'GET', 
                     mode: 'no-cors',
                     signal: controller.signal 
@@ -491,23 +518,26 @@
                 clearTimeout(timeoutId);
                 cctvStatuses[cctvId] = 'live';
             } catch (error) {
-                console.warn(`CCTV Server Error Checked for ID ${cctvId}:`, error);
+                console.warn(`Peringatan: Koneksi Server Gagal untuk CCTV ID ${cctvId}:`, error);
                 cctvStatuses[cctvId] = 'error';
             }
 
             if (triggerRender) updateCCTVBadgeUI(cctvId);
         }
 
+        // Menjalankan pengecekan massal
         function checkAllCCTVStatus() {
             cctvData.forEach(cctv => {
                 checkCCTVStatus(cctv.id, cctv.url, true);
             });
         }
 
+        // Menghubungkan ulang kamera pengawas tertentu
         function reconnectCCTV(cctvId, url) {
             checkCCTVStatus(cctvId, url, true);
         }
 
+        // Memperbarui Elemen UI Lencana Status & Preview Layar CCTV
         function updateCCTVBadgeUI(cctvId) {
             const badgeContainer = document.getElementById(`badge-container-${cctvId}`);
             const screenArea = document.getElementById(`screen-area-${cctvId}`);
@@ -568,7 +598,7 @@
             }
         }
 
-        // Render Cards inside dynamic grids
+        // Merender Seluruh Kartu CCTV di Kontainer Grid
         function renderCCTVGrid(data) {
             const grid = document.getElementById('cctvGrid');
             const emptyState = document.getElementById('emptyState');
@@ -588,13 +618,13 @@
             grid.innerHTML = data.map((cctv, index) => `
                 <div class="group relative bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 flex flex-col">
                     
-                    <!-- Live feed wrapper -->
+                    <!-- Pembungkus live feed -->
                     <div class="relative aspect-video w-full bg-slate-950 overflow-hidden">
                         <div id="screen-area-${cctv.id}" class="w-full h-full">
-                            <!-- Populated on status update -->
+                            <!-- Diisi secara otomatis oleh status update -->
                         </div>
                         
-                        <!-- Status indicator container -->
+                        <!-- Kontainer status atas -->
                         <div class="absolute top-3 left-3 flex items-center space-x-1.5 pointer-events-none">
                             <div id="badge-container-${cctv.id}"></div>
                             <span class="px-2 py-0.5 bg-black/65 text-slate-300 text-[9px] rounded-md font-medium tracking-wide">
@@ -603,7 +633,7 @@
                         </div>
                     </div>
 
-                    <!-- Information details -->
+                    <!-- Informasi detail kartu -->
                     <div class="p-4 flex-grow flex flex-col justify-between border-t border-slate-100 dark:border-slate-800/80">
                         <div>
                             <h4 class="font-extrabold text-slate-900 dark:text-white text-base tracking-tight leading-snug group-hover:text-brand-500 transition-colors duration-150">
@@ -614,7 +644,7 @@
                             </p>
                         </div>
 
-                        <!-- Panel controller actions -->
+                        <!-- Panel kendali bawah -->
                         <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/40 flex items-center justify-between text-xs">
                             <span class="text-slate-400 font-mono text-[10px]">Command Center Pati</span>
                             <div class="flex items-center space-x-1">
@@ -631,7 +661,7 @@
                 </div>
             `).join('');
 
-            // Render live statuses based on previous caching
+            // Render status rill pada masing-masing kartu yang berhasil di-load
             data.forEach(cctv => {
                 updateCCTVBadgeUI(cctv.id);
             });
@@ -639,11 +669,13 @@
             lucide.createIcons();
         }
 
+        // Menginisialisasi input pencarian
         function initSearch() {
             const searchInput = document.getElementById('searchLocation');
             searchInput.addEventListener('input', filterAndSearch);
         }
 
+        // Penggabung pencarian kata kunci dan filter wilayah
         function filterAndSearch() {
             const keyword = document.getElementById('searchLocation').value.toLowerCase();
             
@@ -656,14 +688,44 @@
             renderCCTVGrid(filteredData);
         }
 
-        // Sidebar FAQ Toggler
+        // SISTEM SIDEBAR SELULER (LACI GESER / OFF-CANVAS)
+        function openMobileSidebar() {
+            const sidebar = document.getElementById('sidebarPanel');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            
+            backdrop.classList.remove('hidden');
+            // Menunggu siklus render DOM agar animasi opacity dapat bertransisi dengan mulus
+            setTimeout(() => {
+                backdrop.classList.add('opacity-100');
+                sidebar.classList.remove('-translate-x-full');
+            }, 20);
+            
+            document.body.style.overflow = 'hidden'; // Menghentikan scroll pada background body
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebarPanel');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            
+            sidebar.classList.add('-translate-x-full');
+            backdrop.classList.remove('opacity-100');
+            
+            // Memberikan waktu untuk transisi laci selesai sebelum menyembunyikan elemen backdrop
+            setTimeout(() => {
+                backdrop.classList.add('hidden');
+            }, 300);
+            
+            document.body.style.overflow = 'auto'; // Mengembalikan scroll background body
+        }
+
+        // Penampil Akordeon Bantuan FAQ
         function toggleSidebarFAQ(id) {
             const content = document.getElementById(`faqContent-${id}`);
             const icon = document.getElementById(`faqIcon-${id}`);
             const btn = document.querySelector(`[onclick="toggleSidebarFAQ(${id})"]`);
             
             if (content.classList.contains('hidden')) {
-                // Close other FAQ items
+                // Menutup elemen FAQ lainnya terlebih dahulu
                 for (let i = 1; i <= 3; i++) {
                     const otherContent = document.getElementById(`faqContent-${i}`);
                     const otherIcon = document.getElementById(`faqIcon-${i}`);
@@ -684,7 +746,7 @@
             }
         }
 
-        // Theme Toggle Controller
+        // Pengendali Peralihan Tema
         function toggleTheme() {
             const isDark = document.documentElement.classList.contains('dark');
             if (isDark) {
@@ -700,7 +762,7 @@
             }
         }
 
-        // DETAILED MODAL SYSTEM
+        // SISTEM POP-UP DETAIL MONITOR MODAL
         function openDetailModal(name) {
             const camera = cctvData.find(item => item.nama === name);
             if (!camera) return;
@@ -709,7 +771,7 @@
             document.getElementById('detailTitle').innerText = camera.nama;
             document.getElementById('detailArea').innerHTML = `<i class="fa-solid fa-location-dot text-brand-500 mr-1.5" aria-hidden="true"></i> ${camera.lokasi}`;
 
-            // Sync Badge status on modal
+            // Singkronisasi status koneksi di dalam modal
             const liveBadge = document.getElementById('modalLiveBadge');
             const status = cctvStatuses[camera.id] || 'live';
             const snapshotBtn = document.getElementById('detailSnapshotBtn');
@@ -724,7 +786,7 @@
                 if (snapshotBtn) snapshotBtn.disabled = false;
             }
 
-            // Play stream inside the modal
+            // Memutar aliran video rill di dalam pop-up modal
             const detailIframe = document.getElementById('detailIframe');
             detailIframe.src = camera.url;
 
@@ -735,7 +797,7 @@
 
         function closeDetailModal() {
             const detailIframe = document.getElementById('detailIframe');
-            detailIframe.src = ""; // Clears network traffic bandwidth on modal exit
+            detailIframe.src = ""; // Membersihkan isi iframe untuk menghentikan konsumsi data kuota pengguna
 
             const modal = document.getElementById('detailModal');
             modal.classList.add('hidden');
@@ -743,7 +805,7 @@
             activeDetailId = null;
         }
 
-        // Camera Snapshot Trigger
+        // Penanganan simulasi pengambilan snapshot kamera
         function triggerSnapshot(cameraName) {
             const toast = document.getElementById('toastContainer');
             const msg = document.getElementById('toastMessage');
